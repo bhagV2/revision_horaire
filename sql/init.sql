@@ -23,6 +23,25 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `horaire` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `horaire`;
 
+--
+-- User: `horaireUSer`
+--
+DROP USER IF EXISTS 'horaireUser'@'localhost';
+CREATE USER 'horaireUser'@'localhost' IDENTIFIED BY 'SuperHoraire';
+
+GRANT INSERT ON horaire.* TO 'fooduser'@'localhost';
+GRANT SELECT ON horaire.* TO 'fooduser'@'localhost';
+GRANT UPDATE ON horaire.* TO 'fooduser'@'localhost';
+GRANT DELETE ON horaire.* TO 'fooduser'@'localhost';
+
+DROP USER IF EXISTS 'horaireUser'@'%';
+CREATE USER 'horaireUser'@'%' IDENTIFIED BY 'SuperHoraire';
+
+GRANT INSERT ON horaire.* TO 'fooduser'@'%';
+GRANT SELECT ON horaire.* TO 'fooduser'@'%';
+GRANT UPDATE ON horaire.* TO 'fooduser'@'%';
+GRANT DELETE ON horaire.* TO 'fooduser'@'%';
+
 -- --------------------------------------------------------
 
 --
