@@ -27,20 +27,20 @@ USE `horaire`;
 -- User: `horaireUSer`
 --
 DROP USER IF EXISTS 'horaireUser'@'localhost';
-CREATE USER 'horaireUser'@'localhost' IDENTIFIED BY 'SuperHoraire';
+CREATE USER 'horaireUser'@'localhost' IDENTIFIED BY 'HoraireSuper';
 
-GRANT INSERT ON horaire.* TO 'fooduser'@'localhost';
-GRANT SELECT ON horaire.* TO 'fooduser'@'localhost';
-GRANT UPDATE ON horaire.* TO 'fooduser'@'localhost';
-GRANT DELETE ON horaire.* TO 'fooduser'@'localhost';
+GRANT INSERT ON horaire.* TO 'horaireUser'@'localhost';
+GRANT SELECT ON horaire.* TO 'horaireUser'@'localhost';
+GRANT UPDATE ON horaire.* TO 'horaireUser'@'localhost';
+GRANT DELETE ON horaire.* TO 'horaireUser'@'localhost';
 
 DROP USER IF EXISTS 'horaireUser'@'%';
-CREATE USER 'horaireUser'@'%' IDENTIFIED BY 'SuperHoraire';
+CREATE USER 'horaireUser'@'%' IDENTIFIED BY 'HoraireSuper';
 
-GRANT INSERT ON horaire.* TO 'fooduser'@'%';
-GRANT SELECT ON horaire.* TO 'fooduser'@'%';
-GRANT UPDATE ON horaire.* TO 'fooduser'@'%';
-GRANT DELETE ON horaire.* TO 'fooduser'@'%';
+GRANT INSERT ON horaire.* TO 'horaireUser'@'%';
+GRANT SELECT ON horaire.* TO 'horaireUser'@'%';
+GRANT UPDATE ON horaire.* TO 'horaireUser'@'%';
+GRANT DELETE ON horaire.* TO 'horaireUser'@'%';
 
 -- --------------------------------------------------------
 

@@ -3,7 +3,7 @@
  * Affichage d'une liste d'animaux
  * @author M.Bhagya
  */
-require_once ROOT . "/php/config-secret.php";
+require_once "../config/database.php";
 
 function db() : PDO
 {
