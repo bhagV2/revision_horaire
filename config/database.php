@@ -1,6 +1,6 @@
 <?php
 /**
- * Affichage d'une liste d'animaux
+ * Configuration des constantes d'accès à la base de données
  * @author M.Bhagya
  */
 define("DB_HOST", "localhost");

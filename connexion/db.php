@@ -1,25 +1,25 @@
 <?php
 /**
- * Affichage d'une liste d'animaux
+ * Initialisation de la connexion PDO globale (Singleton)
  * @author M.Bhagya
  */
-require_once "../config/database.php";
+require_once __DIR__ . '/../config/database.php';
 
-function db() : PDO
-{
-    static $db = null;
-
-    if ($db === null) {
-        // Se connecter à la base de données
-        $db = new PDO(
-            "mysql:host=". DB_HOST .";dbname=". DB_NAME .";charset=". DB_CHAR, DB_USER, DB_PASS
-        );
-
-        // Configurer la connexion à la DB
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    }
+function getConnection() {
+    static $pdo = null;
     
-    return $db;
+    if ($pdo === null) {
+        try {
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHAR;
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ]);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["erreur" => "Erreur réseau de base de données."]);
+            exit;
+        }
+    }
+    return $pdo;
 }
