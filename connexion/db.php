@@ -1,6 +1,6 @@
 <?php
 /**
- * Initialisation de la connexion PDO globale (Singleton)
+ * Initialisation de la connexion PDO globale
  * @author M.Bhagya
  */
 require_once __DIR__ . '/../config/database.php';
