@@ -20,8 +20,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `horaire`
 --
-CREATE DATABASE IF NOT EXISTS `horaire` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `horaire` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `horaire`;
+
 
 --
 -- User: `horaireUSer`
@@ -50,10 +51,14 @@ GRANT DELETE ON horaire.* TO 'horaireUser'@'%';
 
 DROP TABLE IF EXISTS `classes`;
 CREATE TABLE `classes` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) NOT NULL COMMENT 'ex. I.DA-P3A',
-  `annee_scolaire` varchar(9) NOT NULL COMMENT 'ex. 2026-2027'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `annee_scolaire` varchar(9) NOT NULL COMMENT 'ex. 2026-2027',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nom` (`nom`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 --
 -- Dumping data for table `classes`
@@ -72,10 +77,12 @@ INSERT INTO `classes` (`id`, `nom`, `annee_scolaire`) VALUES
 
 DROP TABLE IF EXISTS `cours`;
 CREATE TABLE `cours` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `code` varchar(20) NOT NULL COMMENT 'ex. AWEB3',
-  `nom` varchar(120) NOT NULL COMMENT 'ex. Atelier Web'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `nom` varchar(120) NOT NULL COMMENT 'ex. Atelier Web',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `cours`
@@ -102,14 +109,17 @@ INSERT INTO `cours` (`id`, `code`, `nom`) VALUES
 
 DROP TABLE IF EXISTS `creneaux`;
 CREATE TABLE `creneaux` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `classe_id` int NOT NULL,
   `cours_id` int NOT NULL,
   `jour` enum('lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche') NOT NULL,
   `heure_debut` time NOT NULL,
   `heure_fin` time NOT NULL,
-  `salle` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `salle` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cours_id` (`cours_id`),
+  KEY `classe_id` (`classe_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `creneaux`
