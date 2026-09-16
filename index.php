@@ -1,26 +1,34 @@
 <?php
 /**
- * Page d'accueil avec Bootstrap 5
+ * Page d'accueil simple
  * @author M.Bhagya
  */
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <?php include("includes/header.php"); ?>
-    
-    <main class="container my-4">
-        <h1>Accueil</h1>
-        <p class="lead">Vous êtes arrivés sur un site qui affiche des horaires.</p>
-    </main>
+<?php include("includes/header.php"); ?>
 
-    <?php include("includes/footer.php"); ?>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</html>
+<div class="p-4 bg-white rounded border my-4">
+    <h1>Gestion des Horaires - CFPT</h1>
+    <p>Bienvenue sur l'application de consultation et de gestion des emplois du temps.</p>
+</div>
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h3>Classes</h3>
+            <a href="pages/classes.php" class="btn btn-primary mt-2">Gérer les classes</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h3>Cours</h3>
+            <a href="pages/cours.php" class="btn btn-primary mt-2">Gérer les cours</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h3>Horaires</h3>
+            <a href="pages/horaire.php" class="btn btn-success mt-2">Consulter l'horaire</a>
+        </div>
+    </div>
+</div>
+
+<?php include("includes/footer.php"); ?>
