@@ -1,12 +1,11 @@
 <?php
 /**
- * Consultation d'horaire connectée exclusivement à l'API
+ * Consultation d'horaire
  * @author M.Bhagya
  */
 
 $api_url = "http://" . $_SERVER['HTTP_HOST'] . str_replace('/pages/horaire.php', '/api/index.php', $_SERVER['SCRIPT_NAME']);
 
-// 1. Demande de suppression transmise à l'API via POST
 if (isset($_GET['delete_id'])) {
     $options = [
         'http' => [
@@ -20,14 +19,12 @@ if (isset($_GET['delete_id'])) {
     exit;
 }
 
-// 2. Lecture de la liste des classes pour alimenter le menu déroulant depuis l'API (GET)
 $jsonClasses = file_get_contents($api_url . "?route=classes");
 $lesClasses = json_decode($jsonClasses, true) ?? [];
 
 $classeSelectionnee = isset($_GET['classe']) ? trim($_GET['classe']) : '';
 $planning = [];
 
-// 3. Lecture du planning de la classe sélectionnée depuis l'API (GET)
 if (!empty($classeSelectionnee)) {
     $jsonPlanning = file_get_contents($api_url . "?route=cours&classe=" . urlencode($classeSelectionnee));
     $planning = json_decode($jsonPlanning, true) ?? [];
@@ -36,7 +33,7 @@ if (!empty($classeSelectionnee)) {
 
 <?php include("../includes/header.php"); ?>
 
-<h2>Consulter un Horaire (via API)</h2>
+<h2>Consulter un Horaire</h2>
 
 <form method="GET" action="horaire.php" class="mb-4">
     <select class="form-select" name="classe" required>

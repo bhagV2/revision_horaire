@@ -1,13 +1,10 @@
 <?php
 /**
- * Interface des classes connectée exclusivement à l'API
+ * Interface des classes
  * @author M.Bhagya
  */
-
-// On calcule dynamiquement l'URL racine de notre propre API locale
 $api_url = "http://" . $_SERVER['HTTP_HOST'] . str_replace('/pages/classes.php', '/api/index.php', $_SERVER['SCRIPT_NAME']);
 
-// 1. Demande de suppression transmise à l'API via un flux POST
 if (isset($_GET['delete_id'])) {
     $options = [
         'http' => [
@@ -21,7 +18,6 @@ if (isset($_GET['delete_id'])) {
     exit;
 }
 
-// 2. Formulaire d'ajout transmis à l'API via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $options = [
         'http' => [
@@ -35,14 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// 3. Récupération des données lues depuis l'API (GET)
 $json = file_get_contents($api_url . "?route=classes");
 $listeClasses = json_decode($json, true) ?? [];
 ?>
 
 <?php include("../includes/header.php"); ?>
     
-<h2>Gestion des Classes (via API)</h2>
+<h2>Gestion des Classes</h2>
 
 <form method="POST" class="mb-4">
     <label class="form-label">Nom</label>

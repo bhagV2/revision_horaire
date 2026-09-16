@@ -1,13 +1,10 @@
 <?php
 /**
- * Interface de gestion des cours et creneaux connectée exclusivement à l'API
+ * Interface de gestion des cours et creneaux
  * @author M.Bhagya
  */
-
-// On calcule dynamiquement l'URL racine de notre propre API locale
 $api_url = "http://" . $_SERVER['HTTP_HOST'] . str_replace('/pages/cours.php', '/api/index.php', $_SERVER['SCRIPT_NAME']);
 
-// 1. Formulaire 1 : Ajout d'un cours brut via l'API (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_cours'])) {
     $options = [
         'http' => [
@@ -16,13 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_cours'])) {
             'content' => http_build_query($_POST)
         ]
     ];
-    // On passe une action spécifique dans l'URL pour aiguiller l'API
     file_get_contents($api_url . "?route=cours&action=add_cours", false, stream_context_create($options));
     header("Location: cours.php");
     exit;
 }
 
-// 2. Formulaire 2 : Liaison d'un créneau horaire via l'API (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_creneau'])) {
     $options = [
         'http' => [
@@ -36,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_creneau'])) {
     exit;
 }
 
-// 3. Récupération des listes de données depuis l'API (GET) pour alimenter les balises select
 $jsonClasses = file_get_contents($api_url . "?route=classes");
 $lesClasses = json_decode($jsonClasses, true) ?? [];
 
