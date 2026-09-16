@@ -6,5 +6,5 @@
 define("DB_HOST", "localhost");
 define("DB_NAME", "horaire");
 define("DB_CHAR", "utf8");
-define("DB_USER", "HoraireUser");
+define("DB_USER", "horaireUser");
 define("DB_PASS", "HoraireSuper");
