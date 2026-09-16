@@ -10,7 +10,7 @@ require_once __DIR__ . '/../connexion/db.php';
  */
 function getAllCours() {
     $db = getConnection();
-    return $db->query("SELECT * FROM cours")->fetchAll();
+    return $db->query("SELECT * FROM cours ORDER BY code ASC")->fetchAll();
 }
 
 /**
@@ -20,13 +20,4 @@ function addCours($code, $nom) {
     $db = getConnection();
     $stmt = $db->prepare("INSERT INTO cours (code, nom) VALUES (:code, :nom)");
     return $stmt->execute(['code' => $code, 'nom' => $nom]);
-}
-
-/**
- * Supprime un cours par son ID
- */
-function deleteCours($id) {
-    $db = getConnection();
-    $stmt = $db->prepare("DELETE FROM cours WHERE id = :id");
-    return $stmt->execute(['id' => $id]);
 }

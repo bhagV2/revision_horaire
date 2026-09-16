@@ -1,6 +1,6 @@
 <?php
 /**
- * Point d'entrée de l'API REST
+ * Point d'entrée unique de l'API REST
  * @author M.Bhagya
  */
 header("Content-Type: application/json; charset=UTF-8");
@@ -17,24 +17,42 @@ if ($method === 'GET') {
         echo json_encode(getAllClasses(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+
     if ($route === 'cours') {
         if (isset($_GET['classe'])) {
-            $liste = getHorairesByClasse(trim($_GET['classe']));
-            
-            if (!empty($liste)) {
-                echo json_encode([
-                    "classe" => $_GET['classe'],
-                    "annee_scolaire" => $liste[0]['annee_scolaire'] ?? '',
-                    "horaires" => $liste
-                ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-            } else {
-                http_response_code(404);
-                echo json_encode(["erreur" => "Aucun creneau trouve."]);
-            }
-        } 
-        else {
+            $liste = getAllCreneauxByClasse(trim($_GET['classe']));
+            echo json_encode($liste, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        } else {
             echo json_encode(getAllCours(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
+        exit;
+    }
+}
+
+if ($method === 'POST') {
+    $action = isset($_GET['action']) ? trim($_GET['action']) : '';
+
+    if ($action === 'add_classe') {
+        addClasse($_POST['nom'], $_POST['annee_scolaire']);
+        echo json_encode(["statut" => "ok"]);
+        exit;
+    }
+
+    if ($action === 'delete_classe') {
+        deleteClasse((int)$_POST['id']);
+        echo json_encode(["statut" => "ok"]);
+        exit;
+    }
+
+    if ($action === 'add_creneau') {
+        addCreneau($_POST['classe_id'], $_POST['cours_id'], $_POST['jour'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['salle']);
+        echo json_encode(["statut" => "ok"]);
+        exit;
+    }
+
+    if ($action === 'delete_creneau') {
+        deleteCreneau((int)$_POST['id']);
+        echo json_encode(["statut" => "ok"]);
         exit;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Page d'accueil simple
+ * Page d'accueil
  * @author M.Bhagya
  */
 ?>
