@@ -23,26 +23,6 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `horaire` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `horaire`;
 
-
---
--- User: `horaireUSer`
---
-DROP USER IF EXISTS 'horaireUser'@'localhost';
-CREATE USER 'horaireUser'@'localhost' IDENTIFIED BY 'HoraireSuper';
-
-GRANT INSERT ON horaire.* TO 'horaireUser'@'localhost';
-GRANT SELECT ON horaire.* TO 'horaireUser'@'localhost';
-GRANT UPDATE ON horaire.* TO 'horaireUser'@'localhost';
-GRANT DELETE ON horaire.* TO 'horaireUser'@'localhost';
-
-DROP USER IF EXISTS 'horaireUser'@'%';
-CREATE USER 'horaireUser'@'%' IDENTIFIED BY 'HoraireSuper';
-
-GRANT INSERT ON horaire.* TO 'horaireUser'@'%';
-GRANT SELECT ON horaire.* TO 'horaireUser'@'%';
-GRANT UPDATE ON horaire.* TO 'horaireUser'@'%';
-GRANT DELETE ON horaire.* TO 'horaireUser'@'%';
-
 -- --------------------------------------------------------
 
 --
