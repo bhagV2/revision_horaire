@@ -25,12 +25,12 @@ function addCreneau($classe_id, $cours_id, $jour, $heure_debut, $heure_fin, $sal
             VALUES (:classe_id, :cours_id, :jour, :heure_debut, :heure_fin, :salle)";
     $stmt = $db->prepare($sql);
     return $stmt->execute([
-        'classe_id'   => $classe_id,
-        'cours_id'     => $cours_id,
-        'jour'         => $jour,
-        'heure_debut'  => $heure_debut,
-        'heure_fin'    => $heure_fin,
-        'salle'        => $salle
+        'classe_id' => $classe_id,
+        'cours_id' => $cours_id,
+        'jour' => $jour,
+        'heure_debut' => $heure_debut,
+        'heure_fin' => $heure_fin,
+        'salle' => $salle
     ]);
 }
 
