@@ -21,12 +21,12 @@ if ($delete_id) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
-    $classe_id   = filter_input(INPUT_POST, 'classe_id', FILTER_VALIDATE_INT);
-    $cours_id    = filter_input(INPUT_POST, 'cours_id', FILTER_VALIDATE_INT);
-    $jour        = filter_input(INPUT_POST, 'jour', FILTER_SANITIZE_SPECIAL_CHARS);
+    $classe_id = filter_input(INPUT_POST, 'classe_id', FILTER_VALIDATE_INT);
+    $cours_id = filter_input(INPUT_POST, 'cours_id', FILTER_VALIDATE_INT);
+    $jour = filter_input(INPUT_POST, 'jour', FILTER_SANITIZE_SPECIAL_CHARS);
     $heure_debut = filter_input(INPUT_POST, 'heure_debut', FILTER_SANITIZE_SPECIAL_CHARS);
-    $heure_fin   = filter_input(INPUT_POST, 'heure_fin', FILTER_SANITIZE_SPECIAL_CHARS);
-    $salle       = filter_input(INPUT_POST, 'salle', FILTER_SANITIZE_SPECIAL_CHARS);
+    $heure_fin = filter_input(INPUT_POST, 'heure_fin', FILTER_SANITIZE_SPECIAL_CHARS);
+    $salle = filter_input(INPUT_POST, 'salle', FILTER_SANITIZE_SPECIAL_CHARS);
 
     if ($classe_id && $cours_id && !empty($jour) && !empty($heure_debut) && !empty($heure_fin) && !empty($salle)) {
         addCreneau($classe_id, $cours_id, $jour, $heure_debut, $heure_fin, $salle);
