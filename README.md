@@ -19,3 +19,7 @@ Application web et API REST pour gérer les horaires des classes du CFPT.
   `http://localhost/apache/PHP/revision_horaire/api/index.php?route=cours`
 * **Horaire d'une classe :**  
   `http://localhost/apache/PHP/revision_horaire/api/index.php?route=cours&classe=I.DA-P3A`
+
+## Difficultés
+* Connexion à github pour cloner chez moi
+* Re-apprendre les habitudes du codage en PHP
