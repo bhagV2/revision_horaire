@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 03, 2026 at 08:51 AM
--- Server version: 8.0.46-0ubuntu0.24.04.3
+-- Generation Time: Sep 17, 2026 at 09:15 AM
+-- Server version: 8.0.46-0ubuntu0.24.04.4
 -- PHP Version: 8.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `horaire`
 --
-CREATE DATABASE IF NOT EXISTS `horaire` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `horaire` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `horaire`;
 
 -- --------------------------------------------------------
@@ -30,15 +30,13 @@ USE `horaire`;
 --
 
 DROP TABLE IF EXISTS `classes`;
-CREATE TABLE `classes` (
+CREATE TABLE IF NOT EXISTS `classes` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nom` varchar(50) NOT NULL COMMENT 'ex. I.DA-P3A',
-  `annee_scolaire` varchar(9) NOT NULL COMMENT 'ex. 2026-2027',
+  `nom` varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'ex. I.DA-P3A',
+  `annee_scolaire` varchar(9) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'ex. 2026-2027',
   PRIMARY KEY (`id`),
   UNIQUE KEY `nom` (`nom`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `classes`
@@ -56,13 +54,13 @@ INSERT INTO `classes` (`id`, `nom`, `annee_scolaire`) VALUES
 --
 
 DROP TABLE IF EXISTS `cours`;
-CREATE TABLE `cours` (
+CREATE TABLE IF NOT EXISTS `cours` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `code` varchar(20) NOT NULL COMMENT 'ex. AWEB3',
-  `nom` varchar(120) NOT NULL COMMENT 'ex. Atelier Web',
+  `code` varchar(20) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'ex. AWEB3',
+  `nom` varchar(120) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'ex. Atelier Web',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `cours`
@@ -88,18 +86,18 @@ INSERT INTO `cours` (`id`, `code`, `nom`) VALUES
 --
 
 DROP TABLE IF EXISTS `creneaux`;
-CREATE TABLE `creneaux` (
+CREATE TABLE IF NOT EXISTS `creneaux` (
   `id` int NOT NULL AUTO_INCREMENT,
   `classe_id` int NOT NULL,
   `cours_id` int NOT NULL,
-  `jour` enum('lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche') NOT NULL,
+  `jour` enum('lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche') COLLATE utf8mb4_general_ci NOT NULL,
   `heure_debut` time NOT NULL,
   `heure_fin` time NOT NULL,
-  `salle` varchar(20) NOT NULL,
+  `salle` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cours_id` (`cours_id`),
   KEY `classe_id` (`classe_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `creneaux`
@@ -119,65 +117,6 @@ INSERT INTO `creneaux` (`id`, `classe_id`, `cours_id`, `jour`, `heure_debut`, `h
 (11, 1, 5, 'jeudi', '12:40:00', '16:10:00', 'R123'),
 (12, 1, 6, 'vendredi', '08:05:00', '11:40:00', 'RR04'),
 (13, 1, 5, 'vendredi', '12:40:00', '16:10:00', 'C209');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `classes`
---
-ALTER TABLE `classes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `nom` (`nom`);
-
---
--- Indexes for table `cours`
---
-ALTER TABLE `cours`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `code` (`code`);
-
---
--- Indexes for table `creneaux`
---
-ALTER TABLE `creneaux`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cours_id` (`cours_id`),
-  ADD KEY `classe_id` (`classe_id`) USING BTREE;
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `classes`
---
-ALTER TABLE `classes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `cours`
---
-ALTER TABLE `cours`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `creneaux`
---
-ALTER TABLE `creneaux`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `creneaux`
---
-ALTER TABLE `creneaux`
-  ADD CONSTRAINT `creneaux_ibfk_1` FOREIGN KEY (`classe_id`) REFERENCES `classes` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `creneaux_ibfk_2` FOREIGN KEY (`cours_id`) REFERENCES `cours` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,5 +1,5 @@
 --
--- User: `horaireUSer`
+-- User: `horaireUser`
 --
 DROP USER IF EXISTS 'horaireUser'@'localhost';
 CREATE USER 'horaireUser'@'localhost' IDENTIFIED BY 'HoraireSuper';
