@@ -1,6 +1,9 @@
 <?php
+/**
+ * Page de gestion des cours
+ * @author M.Bhagya
+ */
 define('ROOT', '..');
-require_once ROOT . '/config/application.php';
 require_once ROOT . '/functions/classes.php';
 require_once ROOT . '/functions/cours.php';
 
@@ -8,8 +11,8 @@ $message = "";
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
-    $code = filter_input(INPUT_POST, 'code', FILTER_DEFAULT);
-    $nom  = filter_input(INPUT_POST, 'nom', FILTER_DEFAULT);
+    $code = filter_input(INPUT_POST, 'code', FILTER_SANITIZE_SPECIAL_CHARS);
+    $nom  = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_SPECIAL_CHARS);
 
     if (!empty($code) && !empty($nom)) {
         addCours(trim($code), trim($nom));

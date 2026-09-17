@@ -1,6 +1,9 @@
 <?php
+/**
+ * Page de gestion des classes
+ * @author M.Bhagya
+ */
 define('ROOT', '..');
-require_once ROOT . '/config/application.php';
 require_once ROOT . '/functions/classes.php';
 
 $message = "";
@@ -14,8 +17,8 @@ if ($delete_id) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
-    $nom   = filter_input(INPUT_POST, 'nom', FILTER_DEFAULT);
-    $annee = filter_input(INPUT_POST, 'annee_scolaire', FILTER_DEFAULT);
+    $nom   = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_SPECIAL_CHARS);
+    $annee = filter_input(INPUT_POST, 'annee_scolaire', FILTER_SANITIZE_SPECIAL_CHARS);
 
     if (!empty($nom) && !empty($annee)) {
         addClasse(trim($nom), trim($annee));
