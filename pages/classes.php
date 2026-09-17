@@ -12,7 +12,7 @@ if ($delete_id) {
     exit();
 }
 
-$method = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_DEFAULT);
+$method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
     $nom   = filter_input(INPUT_POST, 'nom', FILTER_DEFAULT);
     $annee = filter_input(INPUT_POST, 'annee_scolaire', FILTER_DEFAULT);
