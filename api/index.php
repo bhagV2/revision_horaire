@@ -3,59 +3,139 @@
  * Point d'entrée unique de l'API REST
  * @author M.Bhagya
  */
-header("Content-Type: application/json; charset=UTF-8");
+define("ROOT", __DIR__ . "/..");
 
-require_once __DIR__ . '/../functions/classes.php';
-require_once __DIR__ . '/../functions/cours.php';
-require_once __DIR__ . '/../functions/creneaux.php';
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+require_once ROOT . '/functions/classes.php';
+require_once ROOT . '/functions/cours.php';
+require_once ROOT . '/functions/creneaux.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-$route = isset($_GET['route']) ? trim($_GET['route']) : '';
+$route  = isset($_GET['route']) ? trim($_GET['route']) : '';
+$action = isset($_GET['action']) ? trim($_GET['action']) : '';
 
-if ($method === 'GET') {
+$body = file_get_contents("php://input");
+$inputData = [];
+if ($body !== false && $body !== "") {
+    $inputData = json_decode($body, true) ?? [];
+}
+
+$data = !empty($inputData) ? $inputData : $_POST;
+
+switch ($method) {
+    case "GET":
+        $reponse = traiterGet($route);
+        break;
+    case "POST":
+        $reponse = traiterPost($action, $data);
+        break;
+    default:
+        $reponse = traiterAutre();
+        break;
+}
+
+envoyerReponse($reponse);
+
+// -------------------------------------------------------------
+// Fonctions de traitement de l'API
+// -------------------------------------------------------------
+
+/**
+ * Gère la récupération de données (GET)
+ */
+function traiterGet(string $route): array {
     if ($route === 'classes') {
-        echo json_encode(getAllClasses(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        exit;
+        return [
+            "code" => 200,
+            "data" => getAllClasses()
+        ];
     }
 
     if ($route === 'cours') {
         if (isset($_GET['classe'])) {
             $liste = getAllCreneauxByClasse(trim($_GET['classe']));
-            echo json_encode($liste, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        } else {
-            echo json_encode(getAllCours(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            return ["code" => 200, "data" => $liste];
         }
-        exit;
+        return [
+            "code" => 200, 
+            "data" => getAllCours()
+        ];
+    }
+
+    return [
+        "code" => 404,
+        "data" => ["erreur" => "Route introuvable."]
+    ];
+}
+
+/**
+ * Gère les modifications et ajouts (POST)
+ */
+function traiterPost(string $action, array $data): array {
+    switch ($action) {
+        case 'add_classe':
+            if (empty($data['nom']) || empty($data['annee_scolaire'])) {
+                return ["code" => 400, "data" => ["erreur" => "Données manquantes."]];
+            }
+            addClasse($data['nom'], $data['annee_scolaire']);
+            return ["code" => 200, "data" => ["statut" => "ok"]];
+
+        case 'delete_classe':
+            if (empty($data['id'])) {
+                return ["code" => 400, "data" => ["erreur" => "Identifiant manquant."]];
+            }
+            deleteClasse((int)$data['id']);
+            return ["code" => 200, "data" => ["statut" => "ok"]];
+
+        case 'add_creneau':
+            $requis = ['classe_id', 'cours_id', 'jour', 'heure_debut', 'heure_fin', 'salle'];
+            foreach ($requis as $champ) {
+                if (empty($data[$champ])) {
+                    return ["code" => 400, "data" => ["erreur" => "Le champ {$champ} est requis."]];
+                }
+            }
+            addCreneau($data['classe_id'], $data['cours_id'], $data['jour'], $data['heure_debut'], $data['heure_fin'], $data['salle']);
+            return ["code" => 200, "data" => ["statut" => "ok"]];
+
+        case 'delete_creneau':
+            if (empty($data['id'])) {
+                return ["code" => 400, "data" => ["erreur" => "Identifiant manquant."]];
+            }
+            deleteCreneau((int)$data['id']);
+            return ["code" => 200, "data" => ["statut" => "ok"]];
+
+        default:
+            return [
+                "code" => 404, 
+                "data" => ["erreur" => "Action POST inconnue."]
+            ];
     }
 }
 
-if ($method === 'POST') {
-    $action = isset($_GET['action']) ? trim($_GET['action']) : '';
-
-    if ($action === 'add_classe') {
-        addClasse($_POST['nom'], $_POST['annee_scolaire']);
-        echo json_encode(["statut" => "ok"]);
-        exit;
-    }
-
-    if ($action === 'delete_classe') {
-        deleteClasse((int)$_POST['id']);
-        echo json_encode(["statut" => "ok"]);
-        exit;
-    }
-
-    if ($action === 'add_creneau') {
-        addCreneau($_POST['classe_id'], $_POST['cours_id'], $_POST['jour'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['salle']);
-        echo json_encode(["statut" => "ok"]);
-        exit;
-    }
-
-    if ($action === 'delete_creneau') {
-        deleteCreneau((int)$_POST['id']);
-        echo json_encode(["statut" => "ok"]);
-        exit;
-    }
+/**
+ * Gère les méthodes HTTP non implémentées
+ */
+function traiterAutre(): array {
+    return [
+        "code" => 405,
+        "data" => ["erreur" => "La méthode n'est pas autorisée."]
+    ];
 }
 
-http_response_code(404);
-echo json_encode(["erreur" => "Route introuvable."]);
+/**
+ * Formate et envoie la réponse JSON finale
+ */
+function envoyerReponse(array $reponse): void {
+    http_response_code($reponse['code']);
+    echo json_encode($reponse['data'], JSON_PRETTY_PRINT);
+    exit();
+}

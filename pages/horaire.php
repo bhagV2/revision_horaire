@@ -86,4 +86,47 @@ if (!empty($classeSelectionnee)) {
     </table>
 <?php endif; ?>
 
+<hr>
+
+<h4>Assigner un Créneau</h4>
+<form method="POST">
+    <input type="hidden" name="action_creneau" value="1">
+    
+    <label class="form-label">Classe</label>
+    <select class="form-select" name="classe_id" required>
+        <option value="">-- Choisir --</option>
+        <?php foreach ($lesClasses as $c): ?>
+            <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nom']) ?></option>
+        <?php endforeach; ?>
+    </select>
+
+    <label class="form-label">Cours</label>
+    <select class="form-select" name="cours_id" required>
+        <option value="">-- Choisir --</option>
+        <?php foreach ($lesCours as $co): ?>
+            <option value="<?= $co['id'] ?>">[<?= htmlspecialchars($co['code']) ?>] <?= htmlspecialchars($co['nom']) ?></option>
+        <?php endforeach; ?>
+    </select>
+
+    <label class="form-label">Jour</label>
+    <select class="form-select" name="jour" required>
+        <option value="lundi">Lundi</option>
+        <option value="mardi">Mardi</option>
+        <option value="mercredi">Mercredi</option>
+        <option value="jeudi">Jeudi</option>
+        <option value="vendredi">Vendredi</option>
+    </select>
+
+    <label class="form-label">Début</label>
+    <input type="time" class="form-control" name="heure_debut" required>
+
+    <label class="form-label">Fin</label>
+    <input type="time" class="form-control" name="heure_fin" required>
+
+    <label class="form-label">Salle</label>
+    <input type="text" class="form-control" name="salle" required>
+
+    <button type="submit" class="btn btn-success mt-2">Planifier</button>
+</form>
+
 <?php include("../includes/footer.php"); ?>

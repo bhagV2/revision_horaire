@@ -3,7 +3,6 @@
  * Pied de page
  * @author M.Bhagya
  */
-$root = str_replace('/includes', '', dirname($_SERVER['SCRIPT_NAME']));
 ?>
 </main>
 <footer class="text-center py-4 mt-5 border-top text-muted">

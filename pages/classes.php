@@ -1,77 +1,90 @@
 <?php
-/**
- * Interface des classes
- * @author M.Bhagya
- */
-$api_url = "http://" . $_SERVER['HTTP_HOST'] . str_replace('/pages/classes.php', '/api/index.php', $_SERVER['SCRIPT_NAME']);
+define('ROOT', '..');
+require_once ROOT . '/config/application.php';
+require_once ROOT . '/functions/classes.php';
 
-if (isset($_GET['delete_id'])) {
-    $options = [
-        'http' => [
-            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method'  => 'POST',
-            'content' => http_build_query(['id' => $_GET['delete_id']])
-        ]
-    ];
-    file_get_contents($api_url . "?route=classes&action=delete_classe", false, stream_context_create($options));
+$message = "";
+
+$delete_id = filter_input(INPUT_GET, 'delete_id', FILTER_VALIDATE_INT);
+if ($delete_id) {
+    deleteClasse($delete_id);
     header("Location: classes.php");
-    exit;
+    exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $options = [
-        'http' => [
-            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method'  => 'POST',
-            'content' => http_build_query($_POST)
-        ]
-    ];
-    file_get_contents($api_url . "?route=classes&action=add_classe", false, stream_context_create($options));
-    header("Location: classes.php");
-    exit;
+$method = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_DEFAULT);
+if ($method === 'POST') {
+    $nom   = filter_input(INPUT_POST, 'nom', FILTER_DEFAULT);
+    $annee = filter_input(INPUT_POST, 'annee_scolaire', FILTER_DEFAULT);
+
+    if (!empty($nom) && !empty($annee)) {
+        addClasse(trim($nom), trim($annee));
+        header("Location: classes.php");
+        exit();
+    } else {
+        $message = "Veuillez remplir tous les champs.";
+    }
 }
 
-$json = file_get_contents($api_url . "?route=classes");
-$listeClasses = json_decode($json, true) ?? [];
+$listeClasses = getAllClasses() ?? [];
 ?>
-
-<?php include("../includes/header.php"); ?>
+<?php include ROOT . "/includes/header.php"; ?>
     
 <h2>Gestion des Classes</h2>
 
-<form method="POST" class="mb-4">
-    <label class="form-label">Nom</label>
-    <input type="text" class="form-control" name="nom" required>
-    
-    <label class="form-label">Année scolaire</label>
-    <input type="text" class="form-control" name="annee_scolaire" required>
-    
-    <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
-</form>
+<?php if (!empty($message)): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($message) ?></div>
+<?php endif; ?>
 
-<hr>
+<div class="row">
+    <div class="col-md-5 mb-4">
+        <div class="card p-4 shadow-sm">
+            <h4 class="mb-3">Enregistrer une classe</h4>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Nom</label>
+                    <input type="text" class="form-control" name="nom" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Année scolaire</label>
+                    <input type="text" class="form-control" name="annee_scolaire" placeholder="Ex: 2026-2027" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Enregistrer</button>
+            </form>
+        </div>
+    </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Année</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($listeClasses as $classe): ?>
-            <tr>
-                <td><?= $classe['id'] ?></td>
-                <td><strong><?= htmlspecialchars($classe['nom']) ?></strong></td>
-                <td><?= htmlspecialchars($classe['annee_scolaire']) ?></td>
-                <td>
-                    <a href="classes.php?delete_id=<?= $classe['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ?')">Supprimer</a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+    <div class="col-md-7 mb-4">
+        <h4 class="mb-3">Liste des Classes</h4>
+        <?php if (!empty($listeClasses)): ?>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Année</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($listeClasses as $classe): ?>
+                            <tr>
+                                <td><?= (int)$classe['id'] ?></td>
+                                <td><strong><?= htmlspecialchars($classe['nom'] ?? '') ?></strong></td>
+                                <td><?= htmlspecialchars($classe['annee_scolaire'] ?? '') ?></td>
+                                <td class="text-center">
+                                    <a href="classes.php?delete_id=<?= (int)$classe['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ?')">Supprimer</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <div class="alert alert-info">Aucune classe trouvée.</div>
+        <?php endif; ?>
+    </div>
+</div>
 
-<?php include("../includes/footer.php"); ?>
+<?php include ROOT . "/includes/footer.php"; ?>
