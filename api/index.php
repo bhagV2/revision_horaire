@@ -1,6 +1,6 @@
 <?php
 /**
- * Point d'entrée unique de l'API REST
+ * Point d'entrée unique de l'API
  * @author M.Bhagya
  */
 define("ROOT", __DIR__ . "/..");
@@ -20,8 +20,11 @@ require_once ROOT . '/functions/cours.php';
 require_once ROOT . '/functions/creneaux.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-$route  = isset($_GET['route']) ? trim($_GET['route']) : '';
-$action = isset($_GET['action']) ? trim($_GET['action']) : '';
+$route  = filter_input(INPUT_GET, 'route', FILTER_SANITIZE_SPECIAL_CHARS);
+$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+
+$route  = $route ? trim($route) : '';
+$action = $action ? trim($action) : '';
 
 $body = file_get_contents("php://input");
 $inputData = [];
@@ -29,7 +32,7 @@ if ($body !== false && $body !== "") {
     $inputData = json_decode($body, true) ?? [];
 }
 
-$data = !empty($inputData) ? $inputData : $_POST;
+$data = $inputData;
 
 switch ($method) {
     case "GET":
@@ -61,8 +64,9 @@ function traiterGet(string $route): array {
     }
 
     if ($route === 'cours') {
-        if (isset($_GET['classe'])) {
-            $liste = getAllCreneauxByClasse(trim($_GET['classe']));
+        $classe = filter_input(INPUT_GET, 'classe', FILTER_DEFAULT);
+        if ($classe !== null && $classe !== false) {
+            $liste = getAllCreneauxByClasse(trim($classe));
             return ["code" => 200, "data" => $liste];
         }
         return [
@@ -78,40 +82,64 @@ function traiterGet(string $route): array {
 }
 
 /**
- * Gère les modifications et ajouts (POST)
+ * Gère l'envoi de données (POST)
  */
 function traiterPost(string $action, array $data): array {
     switch ($action) {
         case 'add_classe':
             if (empty($data['nom']) || empty($data['annee_scolaire'])) {
-                return ["code" => 400, "data" => ["erreur" => "Données manquantes."]];
+                return [
+                    "code" => 400, 
+                    "data" => ["erreur" => "Données manquantes."]
+                ];
             }
             addClasse($data['nom'], $data['annee_scolaire']);
-            return ["code" => 200, "data" => ["statut" => "ok"]];
+            return [
+                "code" => 200, 
+                "data" => ["statut" => "ok"]
+            ];
 
         case 'delete_classe':
             if (empty($data['id'])) {
-                return ["code" => 400, "data" => ["erreur" => "Identifiant manquant."]];
+                return [
+                    "code" => 400, 
+                    "data" => ["erreur" => "Identifiant manquant."]
+                ];
             }
             deleteClasse((int)$data['id']);
-            return ["code" => 200, "data" => ["statut" => "ok"]];
+            return [
+                "code" => 200, 
+                "data" => ["statut" => "ok"]
+            ];
 
         case 'add_creneau':
             $requis = ['classe_id', 'cours_id', 'jour', 'heure_debut', 'heure_fin', 'salle'];
             foreach ($requis as $champ) {
                 if (empty($data[$champ])) {
-                    return ["code" => 400, "data" => ["erreur" => "Le champ {$champ} est requis."]];
+                    return [
+                        "code" => 400, 
+                        "data" => ["erreur" => "Le champ {$champ} est requis."]
+                    ];
                 }
             }
             addCreneau($data['classe_id'], $data['cours_id'], $data['jour'], $data['heure_debut'], $data['heure_fin'], $data['salle']);
-            return ["code" => 200, "data" => ["statut" => "ok"]];
+            return [
+                "code" => 200, 
+                "data" => ["statut" => "ok"]
+            ];
 
         case 'delete_creneau':
             if (empty($data['id'])) {
-                return ["code" => 400, "data" => ["erreur" => "Identifiant manquant."]];
+                return [
+                    "code" => 400, 
+                    "data" => ["erreur" => "Identifiant manquant."]
+                ];
             }
             deleteCreneau((int)$data['id']);
-            return ["code" => 200, "data" => ["statut" => "ok"]];
+            return [
+                "code" => 200, 
+                "data" => ["statut" => "ok"]
+            ];
 
         default:
             return [
@@ -122,7 +150,7 @@ function traiterPost(string $action, array $data): array {
 }
 
 /**
- * Gère les méthodes HTTP non implémentées
+ * Gère les méthodes non-traitées
  */
 function traiterAutre(): array {
     return [
@@ -132,7 +160,7 @@ function traiterAutre(): array {
 }
 
 /**
- * Formate et envoie la réponse JSON finale
+ * Affichage de la réponse
  */
 function envoyerReponse(array $reponse): void {
     http_response_code($reponse['code']);
