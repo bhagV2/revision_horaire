@@ -1,10 +1,13 @@
 <?php
 /**
- * Fonctions de gestion pour les creneaux (CRUD)
+ * Fonctions de gestion pour les creneaux
  * @author M.Bhagya
  */
 require_once __DIR__ . '/../connexion/db.php';
 
+/**
+ * Récupère tout l'horaire de la classe
+ */
 function getAllCreneauxByClasse($classeNom) {
     $db = getConnection();
     $sql = "SELECT creneaux.id, creneaux.jour, creneaux.heure_debut, creneaux.heure_fin, creneaux.salle,
@@ -19,6 +22,9 @@ function getAllCreneauxByClasse($classeNom) {
     return $stmt->fetchAll();
 }
 
+/**
+ * Ajoute un nouveau cours à l'horaire
+ */
 function addCreneau($classe_id, $cours_id, $jour, $heure_debut, $heure_fin, $salle) {
     $db = getConnection();
     $sql = "INSERT INTO creneaux (classe_id, cours_id, jour, heure_debut, heure_fin, salle) 
@@ -34,6 +40,9 @@ function addCreneau($classe_id, $cours_id, $jour, $heure_debut, $heure_fin, $sal
     ]);
 }
 
+/**
+ * Retire un cours à l'horaire
+ */
 function deleteCreneau($id) {
     $db = getConnection();
     $stmt = $db->prepare("DELETE FROM creneaux WHERE id = :id");
