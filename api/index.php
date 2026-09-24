@@ -7,13 +7,8 @@ define("ROOT", __DIR__ . "/..");
 
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
 
 require_once ROOT . '/functions/classes.php';
 require_once ROOT . '/functions/cours.php';
@@ -22,6 +17,7 @@ require_once ROOT . '/functions/creneaux.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $route  = filter_input(INPUT_GET, 'route', FILTER_SANITIZE_SPECIAL_CHARS);
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+
 
 $route  = $route ? trim($route) : '';
 $action = $action ? trim($action) : '';
