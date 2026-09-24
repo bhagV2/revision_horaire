@@ -14,11 +14,11 @@ Application web et API REST pour gérer les horaires des classes du CFPT.
 
 ## URL de l'API (Méthode GET)
 * **Liste des classes :**  
-  `http://localhost/apache/PHP/revision_horaire/api/index.php?route=classes`
+  [http://localhost/3eme-annee/Atelier-Web/revision_horaire/api/?route=classes](http://localhost/3eme-annee/Atelier-Web/revision_horaire/api/?route=classes)
 * **Liste des cours :**  
-  `http://localhost/apache/PHP/revision_horaire/api/index.php?route=cours`
+  [http://localhost/3eme-annee/Atelier-Web/revision_horaire/api/?route=cours](http://localhost/3eme-annee/Atelier-Web/revision_horaire/api/?route=classes)
 * **Horaire d'une classe :**  
-  `http://localhost/apache/PHP/revision_horaire/api/index.php?route=cours&classe=I.DA-P3A`
+  [http://localhost/3eme-annee/Atelier-Web/revision_horaire/api/?route=cours&classe=I.DA-P3A](http://localhost/apache/PHP/revision_horaire/api/index.php?route=cours&classe=I.DA-P3A)
 
 ## Difficultés
 * Connexion à github pour cloner chez moi
